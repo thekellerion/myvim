@@ -1,30 +1,42 @@
-﻿set nocompatible              " required
+"  ------------------------------------------------------------
+"       Vundle
+"  ------------------------------------------------------------
+
+
+
+set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-set rtp+=$HOME/vimfiles/bundle/Vundle.vim
-call vundle#begin('$HOME/vimfiles/bundle/')
+set rtp+=c:/users/mom/vimfiles/bundle/Vundle.vim
+" call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+call vundle#begin('c:/users/mom/vimfiles/bundle')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" python-mode Python-IDE
-Plugin 'klen/python-mode'
+"    status bar
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
-" autocompl use jedi-vim  (<c-space>)
+" Plugin 'python-mode/python-mode'
+Plugin 'flazz/vim-colorschemes'
 " Plugin 'davidhalter/jedi-vim'
+"     insall instruction https://github.com/Valloric/YouCompleteMe
+Plugin 'Valloric/YouCompleteMe'
 
-" Plugin 'majutsushi/tagbar'
-"
-" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
-Bundle 'bling/vim-airline'
+" Folding for Python
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'Konfekt/FastFold'
 
+" align text with tabular.vim
+Plugin 'godlygeek/tabular'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-
-
+" To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
 " Brief help
@@ -33,16 +45,13 @@ filetype plugin indent on    " required
 " :PluginSearch foo - searches for foo; append `!` to refresh local cache
 " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
 "
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"  Setup Vundle Ende
-""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "  Standart Einstellungen Start
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
-
 :syntax on
 
 
@@ -51,11 +60,6 @@ filetype plugin indent on    " required
 " automatically reload vimrc when it's saved
 " au BufWritePost _vimrc so ~/_vimrc
 set encoding=utf-8
-
-:colorscheme wombat256mod
-set guifont=Consolas:h11:cANSI
-set linespace=2
-
 
 set number
 set autoindent
@@ -72,7 +76,7 @@ set wildignore=*.o,*~,*.pyc
 
 " A buffer becomes hidden when it is abandoned
 set hid
-
+set clipboard+=unnamed  " Yanks go on clipboard instead.
 " When searching try to be smart about cases
 set smartcase
 
@@ -82,11 +86,13 @@ set incsearch
 
 set ai "Auto indent
 set si "Smart indent
-set wrap! "Wrap lines
-set so=5   "while moving ith j/k, set curse at line 5
+set nowrap! "Wrap lines
+set so=5   "while moving ith j/k, set curse at line 5 when moving around
 " For regular expressions turn magic on
 set magic
 
+" source vimfile
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 " disable creation of swap files
 set noswapfile
@@ -98,6 +104,7 @@ set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
 set ffs=unix,dos,mac
+" set ffs=dos
 
 set completeopt=menu
 
@@ -208,7 +215,6 @@ vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
 
-
 """"""""""""""""""""""""""""""
 " => Panel Navigieren
 """"""""""""""""""""""""""""""
@@ -264,9 +270,6 @@ autocmd FileType vim              let b:kommentar = '\"'
 
 
 
-
-
-
 """"""""""""""""""""""""""""""
 " => Suchen
 """"""""""""""""""""""""""""""
@@ -300,17 +303,18 @@ inoremap <c-up> <esc>v
 " => Klammer schließen
 """"""""""""""""""""""""""""""
 
-inoremap ( ()<left>
-inoremap { {}<left>
-inoremap [ []<left>
-inoremap " ""<left>
-inoremap ' ''<left>
+" inoremap ( ()<left>
+" inoremap { {}<left>
+" inoremap [ []<left>
+" inoremap " ""<left>
+" inoremap ' ''<left>
 
 " Markierter Bereich einklammern
 vnoremap ( s<esc>a()<esc><left>pbbi
 vnoremap { s<esc>a{}<esc><left>pbbi
 vnoremap [ s<esc>a[]<esc><left>pbbi
 vnoremap ' s<esc>a''<esc><left>pbi
+vnoremap " s<esc>a""<esc><left>pbi
 
 
 highlight abaqus_err ctermbg=red guibg=red
@@ -318,25 +322,44 @@ nnoremap <leader>c :match abaqus_err /^.\=$\\|P\d\+;P\\|S\d\+;S\\|G\d\+;G/<cr>
 nnoremap <leader>cc :vimgrep "^.\=\s*$\\|P\d\+;P\\|S\d\+;S\\|G\d\+;G"%<cr>:copen 3<cr>
 
 
+""""""""""""""""""""""""""""""
+" => colorscheme
+""""""""""""""""""""""""""""""
+set linespace=0     "standard 2
 
+set termguicolors     " enable true colors support
+" let ayucolor="mirage" " for mirage version of theme
+" let ayucolor="light"  " for light version of theme
+" let ayucolor="dark"   " for dark version of theme
+" colorscheme ayu
+" colorscheme wombat256mod
+colorscheme visualstudio
+set guifont=Consolas:h11:cANSI
+
+highlight Comment ctermbg=DarkGray
+highlight Constant ctermbg=Blue
+highlight Normal ctermbg=Black
+highlight NonText ctermbg=Black
+highlight Special ctermbg=DarkMagenta
+highlight Cursor ctermbg=Green
+
+" this next line is needed to enable your custom colors:
+syntax enable
 
 """"""""""""""""""""""""""""""
 " => Einstellungen für Python
 """"""""""""""""""""""""""""""
-set tabstop=8 expandtab shiftwidth=4 softtabstop=4
+set tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-nnoremap <leader>sv :source $MYVIMRC<cr>
-nnoremap <F5> :w<cr>:!python.exe %<cr>
-inoremap <F5> <esc>:w<cr>:!python.exe %<cr>
-
-
-
+" nnoremap <F5> :w<cr>:!python.exe %<cr>
+" inoremap <F5> <esc>:w<cr>:!python.exe %<cr>
 
 inoremap <tab> <c-r>=Smart_TabComplete()<CR>
 " ===============================================
 "  Python IDE Setup
-"  ===============================================
-
+"  ==============================================
+" source vim-Ipython https://github.com/ivanov/vim-ipython
+autocmd FileType python   :source ~/vimfiles/ftplugin/ipy.vim
 
 "  settings for
 set laststatus=2
@@ -345,27 +368,22 @@ set wildignore+=*.pyc
 set wildignore+=*_build/*
 set wildignore+=*/coverage/*
 
-
-
-inoremap <silent><C-j> <C-R>=OmniPopup('j')<CR>
-inoremap <silent><C-k> <C-R>=OmniPopup('k')<CR>
-
 " Ignore same warnings
 let g:pymode_lint_ignore = "E222, E221, E303,E701,E251,E271"
+let g:pymode_python = 'python3'
 
 " don't use autocomppletion from pymode (use jedi vim instead)
 let g:pymode_rope = 0
 
 
 """ jedi-vim
-let g:jedi#goto_command = "<leader>d"
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = ""
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<leader>n"
+" let g:jedi#auto_initialization = 0
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>r"
-
+let g:jedi#usages_command = "<leader>z"
+" let g:jedi#popup_on_dot = 0
+" let g:jedi#popup_select_first = 0
+map <Leader>b Oimport ipdb; ipdb.set_trace() # BREAKPOINT<C-c>
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -386,13 +404,51 @@ let g:airline_right_sep = '«'
 let g:airline_right_sep = ''
 
 let g:airline#extensions#tabline#show_buffers = 0
-let g:airline_theme = 'luna'
+let g:airline_theme = 'angr'
+" let g:airline_theme = 'minimalist'
 
-
+" Python folding
+" mkdir -p ~/.vim/ftplugin
+" wget -O ~/.vim/ftplugin/python_editing.vim http://www.vim.org/scripts/download_script.php?src_id=5492
+set nofoldenable
 
 set t_Co=256
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => tabular.vim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+":tabularize /[char]
+if exists(":Tabularize")
+    nmap <Leader>a= :Tabularize /=<CR>
+    vmap <Leader>a= :Tabularize /=<CR>
+    nmap <Leader>a: :Tabularize /:\zs<CR>    " formatiert das erste zeichen nach :
+    vmap <Leader>a: :Tabularize /:\zs<CR>
+endif
 
+
+"  tabular function, read:http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+
+function! s:align()
+  let p = '^\s*|\s.*\s|\s*$'
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize/|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
+endfunction
+
+" var video = {
+    " metadata: {
+        " title: "Aligning assignments"
+        " h264Src: "/media/alignment.mov",
+        " oggSrc: "/media/alignment.ogv"
+        " posterSrc: "/media/alignment.png"
+        " duration:   320,
+    " }
+" }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
