@@ -1,251 +1,178 @@
-" set runtimepath+=~/11_GVim runtimepath+=~/11_GVim/after
-" let &packpath=&runtimepath
-" source ~/11_GVim/_vimrc
-set runtimepath+=~/vimfiles/autoload
-let &packpath=&runtimepath
-source ~/vimfiles/autoload/plug.vim
+" ------------------------------------------------------------
+"
+" Vundle
+" ------------------------------------------------------------
+scriptencoding utf8
+"
+"
+set nocompatible              " be improved, required
+" filetype off                  " required
 
-let g:python3_host_prog  = 'c:/Users/keller_o/anaconda3/python.exe'
+call plug#begin('~\AppData\Local\nvim\plugged')
 
-"-----------------------------------------------------------------------------
-"                            Plugin Manager start                            -
-"-----------------------------------------------------------------------------
-
-call plug#begin('~/vimfiles/plugged')
-" Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
+" status bar
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'bling/vim-bufferline'
 
 Plug 'flazz/vim-colorschemes'
+Plug 'morhetz/gruvbox'
 
-    " beautiful indent guides
+" visual indent lines
 Plug 'Yggdroot/indentLine'
 
+" motion with <leader><leader> s <char>
 Plug 'easymotion/vim-easymotion'
 
-" Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-"
+" ultimate solution for snippets in Vim
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
 " eascape jh without anoying timeout phase
-Plug 'zhou13/vim-easyescape'
+" Plug 'zhou13/vim-easyescape'
 
+" Plug 'davidhalter/jedi-vim'
+" Plug 'Vigemus/iron.nvim'
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                              COC conquer of command                               "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc-lists', {'do': 'yarn install --frozen-lockfile'} " mru and stuff
+" einmal zum installieren folgende Befehle ausfuehren
+" :CocInstall coc-html
+" :CocInstall coc-snippets
+"             coc-rename
 
-" Requirements
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
+" Folding for Python
+" Plug 'tmhedberg/SimpylFold'
+" Plug 'Konfekt/FastFold'
 
-" NOTE: you need to install completion sources to get completions. Check
-" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
+"code colding
+Plug 'pseewald/vim-anyfold'
 
-Plug 'ncm2/ncm2-ultisnips '
-Plug 'ncm2/ncm2-jedi'
-Plug 'ncm2/ncm2-go'
+" CtrlP – Fuzzy File, Buffer and Tag Finder
+" Plug 'ctrlpvim/ctrlp.vim'
 
-Plug 'tmhedberg/SimpylFold'
-Plug 'Konfekt/FastFold'
-
-Plug 'metakirby5/codi.vim'
-" Codi [filetype] activates Codi for the current buffer, using the provided filetype or the buffer's filetype.
-" Codi! deactivates Codi for the current buffer.
-" Codi!! [filetype] toggles Codi for the current buffer, using the provided filetype or the buffer's filetype.
-"     NOTE: not working?!?
-
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-" Plug 'myusuf3/numbers.vim'
 call plug#end()
-"---------------Plug in Ende----------------------------------------
 
-filetype plugin indent on
-nmap my :e ~/AppData/Local/nvim/init.vim
-nmap smy :source ~/AppData/Local/nvim/init.vim
+
+" :PlugInstall
+" :PlugUpdate
+" :PlugClean
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  Standart Einstellungen Start
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+filetype plugin indent on " required
+
+:syntax on
+:let mapleader = ","
 
 set path +=**
-
-syntax on
-syntax enable
-
-let mapleader = ","
-set mouse=a
+nmap my :e ~/AppData/Local/nvim/init.vim
+nnoremap <leader>sv :source $MYVIMRC<cr>
 
 
-"-----------------------------------------------------------------------------
-"                              display setting                               "
-"-----------------------------------------------------------------------------
+" automatically reload vimrc when it's saved
+" au BufWritePost _vimrc so ~/_vimrc
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=ucs-bom,utf-8,gbk,cp936,latin-1
 
-" set guifont!=Consolas
-set termguicolors
-" change font size
-let s:fontsize = 12
 function! AdjustFontSize(amount)
   let s:fontsize = s:fontsize+a:amount
   :execute "GuiFont! Consolas:h" . s:fontsize
 endfunction
+
 " In normal mode, pressing numpad's+ increases the font
 noremap <kPlus> :call AdjustFontSize(1)<CR>
 noremap <kMinus> :call AdjustFontSize(-1)<CR>
 
-set linespace=0
-
-set so=3   "while moving ith j/k, set curse at line 3 when moving around
-set cursorline          " highlights the current line
 set number
 set autoindent
 set ic
-set si "Smart indent
-set wrap! "Wrap lines
-set ai "Auto indent
+set mouse=a
 
-" ---Statusbar
-"$HOME/vimfiles/bundle/ Height of the command bar
+" Height of the command bar
 set cmdheight=1
-" Turn on the WiLd menu
-set wildmenu
+" Turn on the WiLd menu   ( are used for command line completion )
+set wildmode=longest:list,full
 
-" Ignore compiled files
-set wildignore=*.o,*~,*.pyc
-set wildignore+=*.pyc
-set wildignore+=*_build/*
-set wildignore+=*/coverage/*
-
-set completeopt=menu,menuone,longest
-
-" This appears to be necessary; command-t doesn't appear to be falling back to
-" wildignore on its own.
-let g:CommandTWildIgnore=&wildignore
 
 " A buffer becomes hidden when it is abandoned
 set hid
-set clipboard+=unnamed  " Yanks go on clipboard instead.
-
-
-"-----------------------------------------------------------------------------
-"                              searing setting                               "
-"-----------------------------------------------------------------------------
-" When searching try to be smart about cases
-set smartcase
-" Highlight search results
-set hlsearch!
-set incsearch
-
+set clipboard+=unnamedplus  " Yanks go on clipboard instead.
+set ai "Auto indent
+set si "Smart indent
+set wrap! "Wrap lines
+set so=5   "while moving ith j/k, set curse at line 5 when moving around
 " For regular expressions turn magic on
 set magic
 
-" none of these should be word dividers, so make them not be
-set iskeyword+=_,$,@,%,#
-
-" Keep search matches in the middle of the window.
-" zz centers the screen on the cursor, zv unfolds any fold if the cursor
-" suddenly appears inside a fold.
-nnoremap * *zzzv
-nnoremap # #zzzv
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-
-"-----------------------------------------------------------------------------
-"                               editor setting                               "
-"-----------------------------------------------------------------------------
+" source vimfile
 nnoremap <leader>sv :source $MYVIMRC<cr>
+nnoremap <leader>my :tabnew $MYVIMRC
 " disable creation of swap files
 set noswapfile
 set nowritebackup
 set nobackup
 
 " Configure backspace so it acts as it should act
-set backspace=eol,start,indent " Allow backspacing over everything in insert mode
+set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
-" Don't use ALT keys for menus, Standard wak=menu
-set winaltkeys=no
-
 set ffs=unix,dos,mac
+" set ffs=dos
 
 " No annoying sound on errors
 set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
+set autoread                    " Automatically read changed files
+set relativenumber
+set noshowmode                  " We show the mode with airline or lightline
 
-" tries to avoid those annoying hit -enter to continue- messages
-" if it still doesn't help with certain commands, add a second <cr>
-" at the end of the map command
-set shortmess=a
+set completeopt=menu,menuone    " Show popup menu, even if there is one entry
+set pumheight=10                " Completion window max size
+set nocursorcolumn              " Do not highlight column (speeds up highlighting)
+set nocursorline                " Do not highlight cursor (speeds up highlighting)
+set modelines=0                 " default 5
 
-"- Sortfunction
-vnoremap <Leader>s :sort<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  User Einstellungen
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" :colorscheme visualstudio
-" :colorscheme evening
-" :colorscheme Codeschool
-colorscheme solarized8_dark_high
+" Custom Invisibles
 
-map <leader>ab :set filetype=abaqus
-map <leader>py :set filetype=python
+" set list
+" set listchars=tab:▸\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
+" set showbreak=↪
 
- " Insert blank lines without going into insert mode
+
+" Insert blank lines without going into insert mode
 nmap t o<ESC>k
 nmap T O<ESC>j
 
+" add easy date insertion
+map <leader>.     <C-R>=strftime("%d.%m.%Y")<CR>
+
 " delete trailing whitespace
 autocmd BufWritePre * :%s/\s\+$//e
-"  für python
-set tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
+" indent
 vnoremap < <gv
 vnoremap > >gv
 
+" jumd to end of line
 map Y y$
 
-"  hit esc with ,j
-vnoremap <a+j> <esc>
-inoremap <a+j> <esc>
+"Folding
+nnoremap za zA
+nnoremap ya zA
 
-" folding for go
-autocmd FileType go set fdm=syntax foldlevelstart=98
-nnoremap ZA zA
-
-"-----------------------------------------------------------------------------
-"                                  Comments                                  "
-"-----------------------------------------------------------------------------
-function! CommentToggle()
-    if &filetype == 'abaqus'
-        execute ':silent! s/^/\*\* /'
-        execute ':silent! s/^\*\* \*\* //'
-    else
-        execute ':silent! s/\(^\s*\)/\1'.b:kommentar.' /'
-        execute ':silent! s/\(^\s*\)'.b:kommentar.'\s*'.b:kommentar.'\s*/\1/'
-    endif
-endfunction
-
-" Commenting blocks of code.
-autocmd FileType c,cpp,java,scala let b:kommentar = '\/\/'
-autocmd FileType go               let b:kommentar = '\/\/'
-autocmd FileType sh,ruby,python   let b:kommentar = '\#'
-autocmd FileType conf,fstab,perl  let b:kommentar = '\#'
-autocmd FileType tex              let b:kommentar = '\%'
-autocmd FileType mail             let b:kommentar = '\>'
-autocmd FileType vim              let b:kommentar = '\"'
-
-map ++ :call CommentToggle()<CR>j
-" wb setting
-nnoremap -- :.s/^./d/g<cr>:noh<cr>j
-vnoremap -- :s/^./d/g<cr>:noh<cr>j
-nnoremap <leader>d :s/^./d/g<cr>:noh<cr>j
-vnoremap <leader>d :s/^./d/g<cr>:noh<cr>j
-nnoremap 11 :.s/^./1/g<cr>:noh<cr>j
-vnoremap 11 :s/^./1/g<cr>:noh<cr>j
-nnoremap 22 :.s/^./2/g<cr>:noh<cr>j
-vnoremap 22 :s/^./2/g<cr>:noh<cr>j
-map <leader>a jIwb<c-tab>
-
-" ###############   behave like anything else
-"select all
+""""""""""""""""""""""""""""""
+" => behave like anything else
+""""""""""""""""""""""""""""""
+"  select all
 inoremap <c-a> <esc>ggVG
 nnoremap <c-a> <esc>ggVG
 
@@ -267,23 +194,19 @@ vnoremap <c-x> "+d
 inoremap <c-v> <esc>"+p
 nnoremap <c-v> "+p
 vnoremap <c-v> "+p
+noremap p "0p
+vnoremap p "0p
 
-" paste the copied text, not the last deleted
-nnoremap p ""p
-vnoremap p ""p
-nnoremap P ""P
-vnoremap P ""P
-
-"-----------nnoremap------------------"
-"- Movement with hjkl
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  Navigation
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" Movement with hjkl
 nnoremap H ^
 nnoremap L $
 nnoremap K 3k
 nnoremap J 3j
 
 " zeile verschieben
-" nnoremap <c-up> :m-2<cr>
-" nnoremap <c-down> :m+<cr>
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
 inoremap <A-j> <Esc>:m .+1<CR>==gi
@@ -291,22 +214,17 @@ inoremap <A-k> <Esc>:m .-2<CR>==gi
 vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
-" zeile verschieben
-nnoremap <A-l> xp
-nnoremap <A-h> xhhp
-"-------------------------------------
-
-"-----------------------------------------------------------------------------
-"                               Panel handling                               "
-"-----------------------------------------------------------------------------
-"- switch back to last windows
+""""""""""""""""""""""""""""""
+" => Panel Navigieren
+""""""""""""""""""""""""""""""
+"" switch back to last windows
 nnoremap <A-q> <C-W><C-P>
 
-"- Tab: toggle Tabs
+"" Tab: toggle Tabs
 nnoremap <silent> <A-^> :exe "tabn ".g:lasttab<cr>
 vnoremap <silent> <A-^> :exe "tabn ".g:lasttab<cr>
 inoremap <silent> <A-^> :exe "tabn ".g:lasttab<cr>
-"- Tab: switch to buffer 1
+"" Tab: switch to buffer 1
 nnoremap <A-1> 1gt
 nnoremap <A-2> 2gt
 nnoremap <A-3> 3gt
@@ -318,46 +236,80 @@ nnoremap <A-6> 6gt
 nnoremap <leader>m :tabnext<cr>
 nnoremap <leader>n :tabprev<cr>
 
-nnoremap <c-Tab> :bnext<CR>
+"  backspace und delete sollen im normalmode funktionieren
+nnoremap <backspace> hx<CR>
+nnoremap <delete> x
+nnoremap <space> i <esc>
 
-"-----------------------------------------------------------------------------
-"                                  Terminal                                  -
-"-----------------------------------------------------------------------------
-" set shell=powershell.exe
-set splitright     " general setting, open vsplit right
-" run ipyhon in vsplit
-function! Ipy()
-    :vsp term://ipython.exe
+nnoremap <c-tab> :bnext<cr>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  Comment
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map ++ :call CommentToggle()<CR>j
+
+function! CommentToggle()
+    if &filetype == 'abaqus'
+        execute ':silent! s/^/\*\* /'
+        execute ':silent! s/^\*\* \*\* //'
+    else
+        execute ':silent! s/\(^\s*\)/\1'.b:kommentar.' /'
+        execute ':silent! s/\(^\s*\)'.b:kommentar.'\s*'.b:kommentar.'\s*/\1/'
+    endif
 endfunction
-"map <leader>ip :call Ipy()
-tnoremap <Esc> <C-\><C-n>
-:hi! TermCursorNC ctermfg=15 guifg=#fdf6e3 ctermbg=14 guibg=#93a1a1 cterm=NONE gui=NONE
+" Commenting blocks of code.
+autocmd FileType c,cpp,java,scala let b:kommentar = '\/\/'
+autocmd FileType sh,ruby,python   let b:kommentar = '\#'
+autocmd FileType conf,fstab,perl  let b:kommentar = '\#'
+autocmd FileType tex              let b:kommentar = '\%'
+autocmd FileType mail             let b:kommentar = '\>'
+autocmd FileType vim              let b:kommentar = '\"'
 
-function! SendToRightBuffer()
-    let t=getline('.')
-    wincmd w
-    startinsert
+""""""""""""""""""""""""""""""
+" => Suchen
+""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection,
+" vnoremap <silent> * yq/p<cr>
+" vnoremap <silent> # yq?p<CR>
 
-    " execute 'silent! <c-\><c-n>'
-    " execute 'silent! <c-w><c-h>'
+" use this instead, code apove can't handle . \ usw
+xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
+xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
+
+function! s:VSetSearch(cmdtype)
+  let temp = @s
+  norm! gv"sy
+  let @/ = '\V' . substitute(escape(@s, a:cmdtype.'\'), '\n', '\\n', 'g')
+  let @s = temp
 endfunction
-map <a-r> :call SendToRightBuffer()
 
-
-"-----------------------------------------------------------------------------
-"                           searing Visual mode                              "
-"-----------------------------------------------------------------------------
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-vnoremap <silent> * yq/p<cr>
-vnoremap <silent> # yq?p<CR>
-
+"  markierung ersetzen
 vnoremap <space> "hy:%s/<C-r>h//gc<left><left><left>
 
+set smartcase
 
-"-----------------------------
+" Highlight search results
+set hlsearch
+set incsearch
+" set nohlsearch with <cr> or <esc>
+:nnoremap <CR> :nohlsearch<CR><CR>
+:nnoremap <esc> :nohlsearch<CR><CR>
+
+" none of these should be word dividers, so make them not be
+set iskeyword+=_,$,@,%,#
+
+" Keep search matches in the middle of the window.
+" zz centers the screen on the cursor, zv unfolds any fold if the cursor
+" suddenly appears inside a fold.
+
+nnoremap * *zzzv
+nnoremap # #zzzv
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+""""""""""""""""""""""""""""""
 " => Markieren mit Shift-Pfeil
-"-----------------------------
+""""""""""""""""""""""""""""""
 nnoremap <c-left> <esc>v
 inoremap <c-left> <esc>v
 
@@ -370,170 +322,289 @@ inoremap <c-down> <esc>v
 nnoremap <c-up> <esc>v
 inoremap <c-up> <esc>v
 
-"
-"-----------------------------------------------------------------------------
-"                             Klammer schließen                              "
-"-----------------------------------------------------------------------------
+""""""""""""""""""""""""""""""
+" => Klammer schließen
+""""""""""""""""""""""""""""""
 " inoremap ( ()<left>
 " inoremap { {}<left>
 " inoremap [ []<left>
+" inoremap " ""<left>
+" inoremap ' ''<left>
 
 " Markierter Bereich einklammern
 vnoremap ( s<esc>a()<esc><left>pbbi
 vnoremap { s<esc>a{}<esc><left>pbbi
 vnoremap [ s<esc>a[]<esc><left>pbbi
-vnoremap ' s<esc>a''<esc><left>pbi
-vnoremap " s<esc>a--<esc><left>pbi
 vnoremap < s<esc>a<><esc><left>pbbi
+vnoremap ' s<esc>a''<esc><left>pbi
+vnoremap " s<esc>a""<esc><left>pbi
 
 " setze Curser links der Klammer beim schliessern
 inoremap } }<esc>i
-
 
 highlight abaqus_err ctermbg=red guibg=red
 nnoremap <leader>c :match abaqus_err /^.\=$\\|P\d\+;P\\|S\d\+;S\\|G\d\+;G/<cr>
 nnoremap <leader>cc :vimgrep "^.\=\s*$\\|P\d\+;P\\|S\d\+;S\\|G\d\+;G"%<cr>:copen 3<cr>
 
-"      easy inserts without leaving normal mode
-nnoremap <backspace> xh
-nnoremap <delete> x
-nnoremap <space>  i<space><esc>l
+""""""""""""""""""""""""""""""
+" => colorscheme
+""""""""""""""""""""""""""""""
+set linespace=0     "standard 2
 
-"      change \ into / in current line
-nnoremap <leader>/ :.s/\\/\//g<cr>
-"      change \ into \\ in current line
-nnoremap <leader>\ :.s/\\/\\\\/g<cr>
+set termguicolors     " enable true colors support
+" let ayucolor="mirage" " for mirage version of theme
+" let ayucolor="light"  " for light version of theme
+" let ayucolor="dark"   " for dark version of theme
+" colorscheme ayu
+" colorscheme Lucius
+colorscheme solarized8_dark_high
+" colorscheme visualstudio
+" colorscheme solarized8_dark_high
+" colorscheme solarized
+" highlight Comment ctermbg=DarkGray
+" highlight Constant ctermbg=Blue
+" highlight Normal ctermbg=Black
+" highlight NonText ctermbg=Black
+" highlight Special ctermbg=DarkMagenta
+" highlight Cursor ctermbg=Green
+set guicursor=n-v-c-sm:block,i-ci-ve:block,r-cr-o:blocks
+" set background=dark " use dark mode
+" set background=light " uncomment to use light mode
 
+" this next line is needed to enable your custom colors:
+syntax enable
 
-"-----------------------------------------------------------------------------
-"                                  Airline                                   "
-"-----------------------------------------------------------------------------
-let g:airline_powerline_fonts = 0
-" let g:airline_enable_branch     = 1
-" let g:airline_enable_syntastic  = 1
-" let g:airline#extensions#tabline#show_buffers = 1
-" let g:airline#extensions#whitespace#enabled = 1
-"
-set t_Co=256
-if !exists('g:airlinesymbols')
-    let g:airlinesymbols = {}
-endif
+""""""""""""""""""""""""""""""
+" => Einstellungen für Python
+""""""""""""""""""""""""""""""
+set tabstop=4 expandtab shiftwidth=4 softtabstop=4
+" inoremap <tab> <c-r>=Smart_TabComplete()<CR>
+" ===============================================
+"  Python IDE Setup
+"  ==============================================
+" source vim-Ipython https://github.com/ivanov/vim-ipython
+" autocmd FileType python   :source ~/vimfiles/ftplugin/ipy.vim
 
-" let g:airline_left_sep = '»'
-" let g:airline_left_sep = ''
-" let g:airline_right_sep = '«'
-" let g:airline_right_sep = ''
-
-" let g:airline_theme = 'papercolor'
-" let g:airline_theme = 'minimalist'
-let g:airline_theme = 'angr'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline#extensions#tabline#formatter = 'default'
+"  settings for
 set laststatus=2
 
-"-----------------------------------------------------------------------------
-"                                    NCM2                                    "
-"-----------------------------------------------------------------------------
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
+set wildmenu
 
-" IMPORTANT: :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+set wildignore+=*.pyc
+set wildignore+=*_build/*
+set wildignore+=*/coverage/*
 
-" suppress the annoying 'match x of y', 'The only match' and 'Pattern not
-" found' messages
-set shortmess+=c
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Config Airline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:airline_powerline_fonts = 1
+let g:airline_enable_branch     = 1
+let g:airline_enable_syntastic  = 1
 
-" CTRL-C doesn't trigger the InsertLeave autocmd . map to <ESC> instead.
-inoremap <c-c> <ESC>
+if !exists('g:airlinesymbols')
+let g:airlinesymbols = {}
+endif
+"
+let g:airline_left_sep = '»'
+let g:airline_left_sep = ''
+let g:airline_right_sep = '«'
+let g:airline_right_sep = ''
 
-" When the <Enter> key is pressed while the popup menu is visible, it only
-" hides the menu. Use this mapping to close the menu and also start a new
-" line.
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+" let g:airline#extensions#tabline#show_buffers = 0
+let g:airline_theme = 'angr'
+" let g:airline_theme = 'minimalist'
 
-" Use <TAB> to select the popup menu:
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+set nofoldenable
 
-" wrap existing omnifunc
-" Note that omnifunc does not run in background and may probably block the
-" editor. If you don't want to be blocked by omnifunc too often, you could
-" add 180ms delay before the omni wrapper:
-"  'on_complete': ['ncm2#on_complete#delay', 180,
-"               \ 'ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-au User Ncm2Plugin call ncm2#register_source({
-        \ 'name' : 'css',
-        \ 'priority': 9,
-        \ 'subscope_enable': 1,
-        \ 'scope': ['css','scss'],
-        \ 'mark': 'css',
-        \ 'word_pattern': '[\w\-]+',
-        \ 'complete_pattern': ':\s*',
-        \ 'on_complete': ['ncm2#on_complete#omni', 'csscomplete#CompleteCSS'],
-        \ })
+set t_Co=256
 
-
-"-----------------------------------------------------------------------------
-"                                 indentLine                                 "
-"-----------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => indent lines
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:indentLine_char = '┆'
 
-
-"-----------------------------------------------------------------------------
-"                                 easymotion                                 "
-"-----------------------------------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-easymotion
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <Leader> <Plug>(easymotion-prefix)
 
-
-"-----------------------------------------------------------------------------
-"                                 UltiSnips                                  "
-"-----------------------------------------------------------------------------
-let g:UltiSnipsJumpForwardTrigger="<c-n>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => ultisnips
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" YouCompleteMe
+" let g:ycm_key_list_previous_completion=['<Up>']
+" let g:UltiSnipsExpandTrigger="<s-tab>"
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsJumpForwardTrigger="<a-n>"
+let g:UltiSnipsJumpBackwardTrigger="<a-b>"
 let g:UltiSnipsExpandTrigger="<c-tab>"
 let g:UltiSnipsListSnippets="<c-s-tab>"
-" edit UltiSnipsEdit!
-
-"-----------------------------------------------------------------------------
+" If you want :UltiSnipsEdit to split your window.
+" let g:UltiSnipsEditSplit="vertical"
+"
+""-----------------------------------------------------------------------------
 "                               vim-easyescape                               -
 "-----------------------------------------------------------------------------
-let g:easyescape_chars = { "j": 1, "k": 1 }
-let g:easyescape_timeout = 10
-inoremap jk <ESC>
-vnoremap jk <ESC>
 
-"-----------------------------------------------------------------------------
-"                              Helper function                               "
-"-----------------------------------------------------------------------------
-" Returns true if paste mode is enabled
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    endif
-    return ''
+" let g:easyescape_chars = { "j": 1, "k": 1 }
+" let g:easyescape_timeout = 10
+" inoremap jk <ESC>
+" vnoremap jk <ESC>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  COC                                    "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" set shortmess=a    at work
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+"
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 
-function! Smart_TabComplete()
-  let line = getline('.')                         " current line
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-  let substr = strpart(line, -1, col('.')+1)      " from the start of the current
-                                                  " line to one character right
-                                                  " of the cursor
-  let substr = matchstr(substr, "[^ \t]*$")       " word till cursor
-  if (strlen(substr)==0)                          " nothing to match on empty string
-    return "\<tab>"
-  endif
-  let has_period = match(substr, '\.') != -1      " position of period, if any
-  let has_slash = match(substr, '\/') != -1       " position of slash, if any
-  if (!has_period && !has_slash)
-    return "\<C-X>\<C-P>"                         " existing text matching
-  elseif ( has_slash )
-    return "\<C-X>\<C-F>"                         " file matching
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
   else
-    return "\<C-X>\<C-O>"                         " plugin matching
+    call CocAction('doHover')
   endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                             smart renaming !!!!                            "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Introduce function text object
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <TAB> for selections ranges.
+" NOTE: Requires 'textDocument/selectionRange' support from the language server.
+" coc-tsserver, coc-python are the examples of servers that support it.
+" nmap <silent> <TAB> <Plug>(coc-range-select)
+" xmap <silent> <TAB> <Plug>(coc-range-select)
+"
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings using CoCList:
+" Show all diagnostics.
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                                  anyfold                                   "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:anyfold_fold_comments=0
+autocmd Filetype * AnyFoldActivate     " activate for all filetypes
+" or
+" autocmd Filetype <your-filetype> AnyFoldActivate " activate for a specific filetype
+
+set foldlevel=0
+hi Folded term=BOLD cterm=NONE
+
+" disable anyfold for large files
+let g:LargeFile = 1000000 " file is large if size greater than 1MB
+autocmd BufReadPre,BufRead * let f=getfsize(expand("<afile>")) | if f > g:LargeFile || f == -2 | call LargeFile() | endif
+function LargeFile()
+    augroup anyfold
+        autocmd! " remove AnyFoldActivate
+        autocmd Filetype <filetype> setlocal foldmethod=indent " fall back to indent folding
+    augroup END
 endfunction
