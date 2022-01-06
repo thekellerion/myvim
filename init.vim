@@ -5,13 +5,14 @@ set runtimepath+=~/vimfiles/autoload
 let &packpath=&runtimepath
 source ~/vimfiles/autoload/plug.vim
 
-let g:python3_host_prog  = '$HOME/Miniconda3/python.exe'
-let g:coc_node_path = '$HOME\node-v16.13.1-win-x64\node.exe'
+"let g:python3_host_prog  = '$HOME/Miniconda3/python.exe'
+"let g:coc_node_path = '$HOME\node-v16.13.1-win-x64\node.exe'
 "-----------------------------------------------------------------------------
 "                            Plugin Manager start                            -
 "-----------------------------------------------------------------------------
 
-call plug#begin('~/vimfiles/plugged')
+"call plug#begin('~/vimfiles/plugged')
+call plug#begin()
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
